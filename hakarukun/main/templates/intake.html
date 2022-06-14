@@ -1,0 +1,161 @@
+{% extends './base.html' %}
+{% block content %}
+{% load boost %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<html>
+<head>
+
+    <!-- Chart.jsを読み込む -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+</head>
+<body>
+
+    <h1>24時間の水分摂取量は、{{sum}}ml</h1>
+
+    <canvas id="radar-chart" height="200px"></canvas>
+
+    
+
+    <!-- 10min,30min,1h,2,6,12,24 -->
+    Low <input type="range" name="speed" min="0" max="6" id="timeSlider"> High
+</body>
+</html>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script>
+
+"{% autoescape off %}"
+//var res=JSON.parse('{{ data|safe }}');
+
+var time={{time}};
+var ctx = document.getElementById("radar-chart")
+"{% endautoescape %}"
+var options = {
+    animation: {
+            duration: 0 // アニメーション時間
+        },
+        hover: {
+            animationDuration: 0 // アイテムをホバーした時のアニメーション時間
+        },
+        responsiveAnimationDuration: 0, // リサイズ後のアニメーション時間
+    scales: {
+        yAxes: [{
+            ticks: {
+                min: 0
+                //beginAtZero: true
+            }
+        }]
+    },
+    offset:true,
+    //maintainAspectRatio: false,
+};
+
+var myRadarChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+  labels:time,
+  datasets: [
+      
+{% for a,b in data %}
+
+    {
+      label: "{{a}}",
+      data: {{b|safe}},
+      borderColor: "rgba(0,0,255,1)",
+      backgroundColor: "rgba(0,0,0,0)"
+        },
+
+{% endfor %}
+
+    ],
+    
+    },
+    options: options
+});
+
+
+
+$(function(){
+    setInterval(function(){
+        relode()
+    },15000);
+});
+
+// relode()
+
+function relode(){
+    
+    var csrf_token = "{{ csrf_token }}";
+    $.ajax({
+           type: "POST",
+           url: "",
+           data: {
+               sliderval: timeSlider.value,
+           },
+           // 送信前にヘッダにcsrf_tokenを付与。
+           beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            },
+            success: function(data) {
+                if (myRadarChart) {
+                    myRadarChart.destroy();
+                }
+                res=data ;
+                time=res["time"]
+                val=res["val"]
+                names=res["names"]
+                var myRadarChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                labels:time,
+                
+                datasets: [
+
+                {% with ''|center:length as range %}
+                {% for _ in range %}
+                
+                    {
+                    label: names[{{ forloop.counter0 }}],
+                    data: val[{{ forloop.counter0 }}],
+                    borderColor: "rgba(0,0,255,1)",
+                    backgroundColor: "rgba(0,0,0,0)"
+                        },
+                {% endfor %}
+                {% endwith %}
+
+                    ],
+                    },
+                    options: options
+                });
+
+            },
+        });
+}
+
+
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+
+var pieOptions = {
+    animation: false
+};
+
+
+
+
+
+
+
+</script>
+
+{% endblock %}

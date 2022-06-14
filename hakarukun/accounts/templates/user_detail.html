@@ -1,0 +1,24 @@
+
+{% block content %}
+<table class="table">
+    <tbody>
+        <tr>
+            <th>ユーザー名</th>
+            <td>{{ user}}</td>
+        </tr>
+        <tr>
+            <th>姓</th>
+            <td>{{ user.last_name }}</td>
+        </tr>
+        <tr>
+            <th>名</th>
+            <td>{{ user.first_name }}</td>
+        
+    </tbody>
+    
+</table>
+<a href="{% url 'main:home'%}">
+
+    <input type="submit" name="button_1" value="確認" > 
+</a>
+{% endblock %}

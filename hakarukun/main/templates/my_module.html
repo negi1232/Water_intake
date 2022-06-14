@@ -1,0 +1,33 @@
+{% extends './base.html' %}
+{% block content %}
+<table class="table table-striped">
+    <tr>
+        <th>uuid</th>
+        <th>screenname</th>
+        <th>password</th>
+        <th></th>
+    </tr>
+    {% for i in data %}
+        <tr>
+        {% for j in i %}
+            <td>{{ j }}</td>   
+        {% endfor %}
+        <td>
+            <form action="{% url 'main:edit_module' i.0 %}" method="get">
+                {% csrf_token %}
+                <input type="submit" name="button" value="detail"class="btn btn-outline-primary"> 
+            </form>
+            <form action="{% url 'main:del_module' i.0 %}" method="get">
+                {% csrf_token %}
+                <input type="submit" name="button" value="delete" class="btn btn-outline-primary"> 
+            </form>
+        </td>
+        
+        </tr>
+        
+    {% endfor %}
+        
+    
+</table>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+{% block content %}
+
+    <h1>過去24時間の水分摂取量は、{{sum}} mlです</h1>
+
+
+    <table class="table table-striped">
+
+        {% for a,b in data %}
+        <tr>
+            <td>{{ a }}</td>
+            <td>{{ b }}ml</td>
+        </tr>
+        
+        {% endfor %}
+        
+            
+        
+    </table>
+
+
+
+{% endblock %}

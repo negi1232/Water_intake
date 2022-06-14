@@ -1,0 +1,13 @@
+{% extends './base.html' %}
+{% block content %}
+
+    <h1>本当に削除しますか？</h1>
+    <form action="{% url 'main:del_module' uuid%}" method="post">
+        {% csrf_token %}
+        <input type="submit" name="button" value="yes"> 
+    </form>
+    <form action="{% url 'main:home' %}" method="get">
+        {% csrf_token %}
+        <input type="submit" name="button" value="No"> 
+    </form>
+{% endblock %}

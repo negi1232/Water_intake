@@ -1,0 +1,11 @@
+{% extends './base.html' %}
+{% block content %}
+
+    <p>setting</p>
+    
+    <a class="nav-item nav-link" href="{% url 'accounts:user_detail' user.pk %}">ユーザー情報閲覧</a>
+    <a class="nav-item nav-link" href="{% url 'accounts:user_update' user.pk %}">ユーザー情報更新</a>
+    <a class="nav-item nav-link" href="{% url 'main:my_module'%}">自分のモジュールを確認する</a>
+    <a class="nav-item nav-link" href="{% url 'main:add_module'%}">新しいモジュールを追加する</a>
+
+{% endblock %}
