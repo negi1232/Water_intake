@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 #data
-/hakarukun/settings.py
+./hakarukun/settings.py
